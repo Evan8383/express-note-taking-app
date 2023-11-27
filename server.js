@@ -39,8 +39,8 @@ app.post('/api/notes', async (req, res) => {
 })
 
 app.delete('/api/notes/:id', (req, res) => {
-  db.forEach((notes, index) => {
-    if (notes.id == req.params.id) {
+  db.forEach((note, index) => {
+    if (note.id == req.params.id) {
       db.splice(index, 1)
     }
   })
