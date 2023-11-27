@@ -13,7 +13,7 @@ const getNextId = (arr) => {
   return id
 }
 
-const appendNewNote = async () => {
+const updateNotes = async () => {
   await fs.writeFile('./db/db.json', JSON.stringify(db))
 }
 
@@ -25,7 +25,7 @@ app.get('/notes', (req, res) => {
 })
 
 app.get('/api/notes', (req, res) => {
-  appendNewNote()
+  updateNotes()
   res.json(db)
 })
 
@@ -35,7 +35,16 @@ app.post('/api/notes', async (req, res) => {
 
   const noteData = { id, title, text }
   db.push(noteData)
-  res.json(db)
+  res.send('Note added')
+})
+
+app.delete('/api/notes/:id', (req, res) => {
+  db.forEach((notes, index) => {
+    if (notes.id == req.params.id) {
+      db.splice(index, 1)
+    }
+  })
+  res.send('Note removed')
 })
 
 app.listen(PORT, () => {
