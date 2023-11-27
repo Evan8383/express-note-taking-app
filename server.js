@@ -24,8 +24,8 @@ app.get('/notes', (req, res) => {
   res.sendFile(__dirname + '/public/notes.html')
 })
 
-app.get('/api/notes', (req, res) => {
-  updateNotes()
+app.get('/api/notes', async (req, res) => {
+  await updateNotes()
   res.json(db)
 })
 
