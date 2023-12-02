@@ -96,10 +96,12 @@ const handleNoteSave = () => {
     title: noteTitle.value,
     text: noteText.value
   };
-  saveNote(newNote).then(async () => {
-    getAndRenderNotes();
-    renderActiveNote();
-  });
+  if (newNote != null) {
+    saveNote(newNote).then(() => {
+      getAndRenderNotes();
+      renderActiveNote();
+    });
+  }
 };
 
 const handleEditNote = () => {
@@ -160,8 +162,9 @@ const handleNoteDelete = (e) => {
 // Sets the activeNote and displays it
 const handleNoteView = (e) => {
   e.preventDefault();
-  activeNote = JSON.parse(e.target.parentElement.getAttribute('data-note'));
-  renderActiveNote();
+    activeNote = JSON.parse(e.target.parentElement.getAttribute('data-note'));
+    console.log(activeNote)
+    renderActiveNote();
 };
 
 // Sets the activeNote to and empty object and allows the user to enter a new note
@@ -200,7 +203,9 @@ const renderNoteList = async (notes) => {
     const spanEl = document.createElement('span');
     spanEl.classList.add('list-item-title');
     spanEl.innerText = text;
-    spanEl.addEventListener('click', handleNoteView);
+    if (jsonNotes.length !== 0){
+      spanEl.addEventListener('click', handleNoteView);
+    }
 
     liEl.append(spanEl);
 
