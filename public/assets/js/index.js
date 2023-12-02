@@ -105,6 +105,7 @@ const handleNoteSave = () => {
 const handleEditNote = () => {
   show(saveChanges)
   show(cancelChanges)
+  hide(editNote)
 
   noteTitle.removeAttribute('readonly');
   noteText.removeAttribute('readonly');
@@ -123,10 +124,14 @@ const handleSaveChanges = (e) => {
     noteTitle.setAttribute('readonly', true);
     noteText.setAttribute('readonly', true);
   })
+  hide(saveChanges)
+  hide(cancelChanges)
+  show(editNote)
 }
 const handleCancelChanges = () => {
   hide(saveChanges)
   hide(cancelChanges)
+  show(editNote)
   noteTitle.setAttribute('readonly', true);
   noteText.setAttribute('readonly', true);
 }
