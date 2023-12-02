@@ -48,7 +48,13 @@ router.delete('/:id', async (req, res) => {
 })
 
 router.put('/:id', async (req, res) =>{
-  
+  const noteId = req.params.id
+  const { title:noteTitle, text:noteText } = req.body
+  const [results] = await db.query(
+    'UPDATE notes SET ? WHERE noteID=?',
+    [{noteTitle, noteText}, noteId]
+  );
+  res.json(results)
 })
 
 module.exports = router

@@ -5,7 +5,7 @@ body {
   padding: 0;
 }
 
-.save-note, .new-note, .clear-btn, .edit-note, .save-note-change, .cancel-note-change {
+.save-note, .new-note, .clear-btn, .cancel-note-change, .save-note-change, .edit-note {
   display: none;
 }
 

@@ -4,6 +4,10 @@ let noteText;
 let saveNoteBtn;
 let newNoteBtn;
 let noteList;
+let editNote;
+let saveChanges;
+let cancelChanges;
+
 
 if (window.location.pathname === '/notes') {
   noteForm = document.querySelector('.note-form');
@@ -13,6 +17,10 @@ if (window.location.pathname === '/notes') {
   newNoteBtn = document.querySelector('.new-note');
   clearBtn = document.querySelector('.clear-btn');
   noteList = document.querySelectorAll('.list-container .list-group');
+
+  editNote = document.querySelector('.edit-note');
+  saveChanges = document.querySelector('.save-note-change');
+  cancelChanges = document.querySelector('.cancel-note-change');
 }
 
 // Show an element
@@ -53,18 +61,29 @@ const deleteNote = (id) =>
     }
   });
 
+const updateNote = (id, note) =>
+  fetch(`/api/notes/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(note)
+  });
+
 const renderActiveNote = () => {
   hide(saveNoteBtn);
   hide(clearBtn);
 
   if (activeNote.noteID) {
     show(newNoteBtn);
+    show(editNote)
     noteTitle.setAttribute('readonly', true);
     noteText.setAttribute('readonly', true);
     noteTitle.value = activeNote.noteTitle;
     noteText.value = activeNote.noteText;
   } else {
     hide(newNoteBtn);
+    hide(editNote)
     noteTitle.removeAttribute('readonly');
     noteText.removeAttribute('readonly');
     noteTitle.value = '';
@@ -77,11 +96,40 @@ const handleNoteSave = () => {
     title: noteTitle.value,
     text: noteText.value
   };
-  saveNote(newNote).then(() => {
+  saveNote(newNote).then(async () => {
     getAndRenderNotes();
     renderActiveNote();
   });
 };
+
+const handleEditNote = () => {
+  show(saveChanges)
+  show(cancelChanges)
+
+  noteTitle.removeAttribute('readonly');
+  noteText.removeAttribute('readonly');
+
+  saveChanges.addEventListener('click', handleSaveChanges)
+  cancelChanges.addEventListener('click', handleCancelChanges)
+}
+const handleSaveChanges = (e) => {
+  const noteId = JSON.parse(activeNote.noteID);
+  const note = {
+    title: noteTitle.value,
+    text: noteText.value
+  }
+  updateNote(noteId, note).then(() => {
+    getAndRenderNotes();
+    noteTitle.setAttribute('readonly', true);
+    noteText.setAttribute('readonly', true);
+  })
+}
+const handleCancelChanges = () => {
+  hide(saveChanges)
+  hide(cancelChanges)
+  noteTitle.setAttribute('readonly', true);
+  noteText.setAttribute('readonly', true);
+}
 
 // Delete the clicked note
 const handleNoteDelete = (e) => {
@@ -94,7 +142,8 @@ const handleNoteDelete = (e) => {
   if (activeNote.noteID === noteId) {
     activeNote = {};
   }
-
+  hide(saveChanges)
+  hide(cancelChanges)
   deleteNote(noteId).then(() => {
     getAndRenderNotes();
     renderActiveNote();
@@ -189,6 +238,7 @@ if (window.location.pathname === '/notes') {
   newNoteBtn.addEventListener('click', handleNewNoteView);
   clearBtn.addEventListener('click', renderActiveNote);
   noteForm.addEventListener('input', handleRenderBtns);
+  editNote.addEventListener('click', handleEditNote)
 }
 
 getAndRenderNotes();
