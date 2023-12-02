@@ -15,6 +15,7 @@
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "jest": "^29.7.0",
+    "mysql2": "^3.6.5",
     "superagent": "^8.1.2",
     "supertest": "^6.3.3"
   }
