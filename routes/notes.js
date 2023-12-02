@@ -10,19 +10,6 @@ const db = mysql.createConnection(
   console.log('Connected to the notes database')
 ).promise();
 
-// const getNextId = (arr) => {
-//   let id
-//   for (let i = 0; i < arr.length; i++) {
-//     id = arr[arr.length - 1].id
-//     id += 1
-//   }
-//   return id
-// }
-
-// const updateNotes = async () => {
-//   await fs.writeFile('./db/db.json', JSON.stringify(db, null, 2))
-// }
-
 router.route('/')
   .get(async (req, res) => {
     const [results] = await db.query('SELECT * FROM notes')
@@ -41,20 +28,21 @@ router.route('/')
     res.json(results)
   })
 
-router.delete('/:id', async (req, res) => {
-  const noteId = req.params.id
-  const [results] = await db.query('DELETE FROM notes WHERE noteID=?', noteId);
-  res.json(results)
-})
+router.route('/:id')
+  .delete(async (req, res) => {
+    const noteId = req.params.id
+    const [results] = await db.query('DELETE FROM notes WHERE noteID=?', noteId);
+    res.json(results)
+  })
 
-router.put('/:id', async (req, res) =>{
-  const noteId = req.params.id
-  const { title:noteTitle, text:noteText } = req.body
-  const [results] = await db.query(
-    'UPDATE notes SET ? WHERE noteID=?',
-    [{noteTitle, noteText}, noteId]
-  );
-  res.json(results)
-})
+  .put(async (req, res) => {
+    const noteId = req.params.id
+    const { title: noteTitle, text: noteText } = req.body
+    const [results] = await db.query(
+      'UPDATE notes SET ? WHERE noteID=?',
+      [{ noteTitle, noteText }, noteId]
+    );
+    res.json(results)
+  })
 
 module.exports = router

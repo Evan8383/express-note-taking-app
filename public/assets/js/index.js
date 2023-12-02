@@ -126,6 +126,8 @@ const handleSaveChanges = (e) => {
   })
   hide(saveChanges)
   hide(cancelChanges)
+  hide(saveNoteBtn)
+  hide(clearBtn)
   show(editNote)
 }
 const handleCancelChanges = () => {
